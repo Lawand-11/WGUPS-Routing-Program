@@ -158,6 +158,7 @@ def main():
         for truck in truck_objects:
             for package in truck.route:
                 if package.package_id == package_id:
+                    print_current_package_details(package_id)
                     status = get_package_status(package, user_input_time)
                     print(f"Truck {truck.truck_id}: {status}{Style.RESET_ALL}")
                     return
@@ -194,6 +195,14 @@ def main():
                 return package_id
             except ValueError:
                 print(f"{Fore.RED}Invalid package ID. Please enter a valid integer.{Style.RESET_ALL}")
+
+    def print_current_package_details(current_package):
+        package = package_hash_table.lookup(current_package)
+        print(f"Address: {package.address}\n"
+              f"Deadline: {package.deadline}\n"
+              f"City: {package.city}\n"
+              f"Zipcode: {package.zip_code}\n"
+              f"Weight: {package.weight} Kilo")
 
     # loop to start the user interface
     while True:
