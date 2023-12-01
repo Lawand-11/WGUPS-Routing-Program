@@ -26,7 +26,7 @@ def main():
     6	3060 Lester St	West Valley City	UT	84119	10:30 AM	88	Delayed on flight---will not arrive to depot until 9:05 am
     7	1330 2100 S	Salt Lake City	UT	84106	EOD	8	
     8	300 State St	Salt Lake City	UT	84103	EOD	9	
-    9	300 State St	Salt Lake City	UT	84103	EOD	2	Wrong address listed
+    9	410 S State St	Salt Lake City	UT	84111	EOD	2	Wrong address listed
     10	600 E 900 South	Salt Lake City	UT	84105	EOD	1	
     11	2600 Taylorsville Blvd	Salt Lake City	UT	84118	EOD	1	
     12	3575 W Valley Central Station bus Loop	West Valley City	UT	84119	EOD	1	
@@ -98,7 +98,8 @@ def main():
 
         # Extract package information from the split line
         package_id = int(package_info[0])
-        address = address_to_hub_mapping.get(package_info[1], "Unknown Hub")
+        hub_name = address_to_hub_mapping.get(package_info[1], "Unknown Hub")
+        address = package_info[1]
         city = package_info[2]
         state = package_info[3]
         zip_code = package_info[4]
@@ -122,7 +123,7 @@ def main():
                     print(f"Invalid special note: {special_notes_str}")
 
         # Create a Package object and add it to the hash table
-        package = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes_enum,
+        package = Package(package_id, hub_name, address, city, state, zip_code, deadline, weight, special_notes_enum,
                           dependencies)
         package_hash_table.insert(package)
 
@@ -158,7 +159,7 @@ def main():
         for truck in truck_objects:
             for package in truck.route:
                 if package.package_id == package_id:
-                    print_current_package_details(package_id)
+                    print_current_package_details(package_id, user_input_time)
                     status = get_package_status(package, user_input_time)
                     print(f"Truck {truck.truck_id}: {status}{Style.RESET_ALL}")
                     return
@@ -196,12 +197,23 @@ def main():
             except ValueError:
                 print(f"{Fore.RED}Invalid package ID. Please enter a valid integer.{Style.RESET_ALL}")
 
-    def print_current_package_details(current_package):
+    def print_current_package_details(current_package, user_input_time):
         package = package_hash_table.lookup(current_package)
-        print(f"Address: {package.address}\n"
+        package_9_address_time = datetime.strptime("10:20 AM", "%I:%M %p")
+        if package.package_id == 9:
+            if user_input_time < package_9_address_time:
+                package_address = "300 State St"
+                package_zipcode = "84103"
+            else:
+                package_address = package.address
+                package_zipcode = package.zip_code
+        else:
+            package_address = package.address
+            package_zipcode = package.zip_code
+        print(f"Address: {package_address}\n"
               f"Deadline: {package.deadline}\n"
               f"City: {package.city}\n"
-              f"Zipcode: {package.zip_code}\n"
+              f"Zipcode: {package_zipcode}\n"
               f"Weight: {package.weight} Kilo")
 
     # loop to start the user interface

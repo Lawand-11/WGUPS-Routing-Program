@@ -54,13 +54,13 @@ def nearest_neighbor(packages):
 
         # Check the packages in truck 2
         for p in truck2.route:
-            distance = calculate_distance_between_hubs(p.address, pkg.address)[0]
+            distance = calculate_distance_between_hubs(p.hub_name, pkg.hub_name)[0]
             if distance < min_distance2:
                 min_distance2 = distance
 
         # Check the packages in truck 3
         for p in truck3.route:
-            distance = calculate_distance_between_hubs(p.address, pkg.address)[0]
+            distance = calculate_distance_between_hubs(p.hub_name, pkg.hub_name)[0]
             if distance < min_distance3:
                 min_distance3 = distance
 
@@ -99,11 +99,11 @@ def optimize_route(truck):
     while truck.route:
         nearest_package = min(
             truck.route,
-            key=lambda pkg: calculate_distance_between_hubs(current_location, pkg.address)[1]
+            key=lambda pkg: calculate_distance_between_hubs(current_location, pkg.hub_name)[1]
         )
 
-        current_route.append(nearest_package.address)
-        current_location = nearest_package.address
+        current_route.append(nearest_package.hub_name)
+        current_location = nearest_package.hub_name
         truck.route.remove(nearest_package)
         sorted_packages.append(nearest_package)
 

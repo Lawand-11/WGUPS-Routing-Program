@@ -43,8 +43,8 @@ class Truck:
             package.update_status(PackageStatus.EN_ROUTE)
 
         for package in self.route:
-            distance, estimated_travel_time = calculate_distance_between_hubs(current_location, package.address)
-            current_location = package.address  # Update current location
+            distance, estimated_travel_time = calculate_distance_between_hubs(current_location, package.hub_name)
+            current_location = package.hub_name  # Update current location
 
             # Update truck information
             self.distance_driven += distance

@@ -19,6 +19,7 @@ class Package:
     def __init__(
             self,
             package_id,
+            hub_name,
             address,
             city,
             state,
@@ -28,9 +29,11 @@ class Package:
             special_note=None,
             dependencies=None,
             departure_time=None
+
     ):
         self.departure_time = departure_time
         self.package_id = package_id
+        self.hub_name = hub_name
         self.address = address
         self.city = city
         self.state = state
